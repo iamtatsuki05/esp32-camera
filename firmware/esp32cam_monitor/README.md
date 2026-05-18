@@ -9,9 +9,11 @@
 cp firmware/esp32cam_monitor/include/config.sample.h firmware/esp32cam_monitor/include/config.h
 ```
 
-`config.h` に Wi-Fi SSID、Wi-Fi password、PC 側サーバー URL、camera ID を設定します。
+`config.h` に Wi-Fi SSID、Wi-Fi password、PC 側サーバー URL、camera ID、撮影 JPEG quality を設定します。
 `config.h` は `.gitignore` 済みです。
 repo root の `make esp32-upload` は、placeholder が残っている `config.h` では停止します。
+
+`CAMERA_JPEG_QUALITY` は ESP32-CAM 側の撮影品質です。数値が小さいほど高画質・大きい payload になります。サーバー保存時の再エンコード品質は root の `config/server*.toml` の `save_jpeg_quality` で設定します。
 
 ## ビルド
 

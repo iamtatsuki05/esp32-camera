@@ -12,6 +12,7 @@ def test_load_server_settings_from_toml_and_overrides(tmp_path: Path) -> None:
                 'port = 9000',
                 f'output_dir = "{tmp_path / "out"}"',
                 'analyzer = "mock-yolo"',
+                'save_jpeg_quality = 80',
                 'uploader_mode = "dry-run"',
                 'default_camera_id = "from-config"',
             ],
@@ -26,6 +27,7 @@ def test_load_server_settings_from_toml_and_overrides(tmp_path: Path) -> None:
         port=9001,
         output_dir=tmp_path / 'out',
         analyzer='mock-yolo',
+        save_jpeg_quality=80,
         uploader_mode='dry-run',
         default_camera_id='from-config',
     )

@@ -1,5 +1,9 @@
 from __future__ import annotations
 
+from io import BytesIO
+
+from PIL import Image, UnidentifiedImageError
+
 
 def detect_image_content_type(image_bytes: bytes) -> str | None:
     """Detect supported image content type from file magic bytes."""
@@ -31,4 +35,10 @@ def validate_image_bytes(image_bytes: bytes, content_type: str) -> str:
     if detected != declared:
         msg = f'Image content type mismatch: declared {declared}, detected {detected}'
         raise ValueError(msg)
+    try:
+        with Image.open(BytesIO(image_bytes)) as image:
+            image.verify()
+    except (OSError, UnidentifiedImageError) as exc:
+        msg = 'Frame body is not a valid image.'
+        raise ValueError(msg) from exc
     return detected

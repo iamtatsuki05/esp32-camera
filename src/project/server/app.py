@@ -20,7 +20,10 @@ def create_app(settings: ServerSettings | None = None) -> FastAPI:
             yolo_model_path=resolved_settings.yolo_model_path,
             yolo_confidence_threshold=resolved_settings.yolo_confidence_threshold,
         ),
-        storage=LocalFrameStorage(output_dir=resolved_settings.output_dir),
+        storage=LocalFrameStorage(
+            output_dir=resolved_settings.output_dir,
+            save_jpeg_quality=resolved_settings.save_jpeg_quality,
+        ),
         uploader=create_uploader(resolved_settings.uploader_mode, resolved_settings.output_dir),
     )
     app = FastAPI(title='ESP32 Camera Monitor', version='0.1.0')

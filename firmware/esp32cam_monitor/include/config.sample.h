@@ -11,3 +11,6 @@
 // Keep this interval conservative while testing on USB power.
 #define CAPTURE_INTERVAL_MS 10000
 
+// ESP32 camera JPEG quality. Lower means better quality and larger payload.
+// Typical range is 10-20 for ESP32-CAM.
+#define CAMERA_JPEG_QUALITY 12

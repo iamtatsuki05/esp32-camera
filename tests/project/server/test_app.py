@@ -44,6 +44,22 @@ def test_frame_endpoint_rejects_non_image_bytes(tmp_path: Path) -> None:
     assert not list((tmp_path / 'images').glob('*'))
 
 
+def test_frame_endpoint_uses_configured_save_jpeg_quality(tmp_path: Path) -> None:
+    app = create_app(ServerSettings(output_dir=tmp_path, save_jpeg_quality=40))
+    client = TestClient(app)
+
+    response = client.post(
+        '/api/v1/frames',
+        content=SMOKE_JPEG,
+        headers={'content-type': 'image/jpeg'},
+    )
+
+    assert response.status_code == 201
+    saved = Path(response.json()['image_path']).read_bytes()
+    assert saved.startswith(b'\xff\xd8\xff')
+    assert saved != SMOKE_JPEG
+
+
 def test_health_endpoint_reports_dry_run_defaults(tmp_path: Path) -> None:
     app = create_app(ServerSettings(output_dir=tmp_path))
     client = TestClient(app)

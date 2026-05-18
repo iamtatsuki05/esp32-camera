@@ -22,6 +22,9 @@
 #ifndef CAPTURE_INTERVAL_MS
 #define CAPTURE_INTERVAL_MS 10000
 #endif
+#ifndef CAMERA_JPEG_QUALITY
+#define CAMERA_JPEG_QUALITY 12
+#endif
 
 namespace {
 
@@ -85,7 +88,7 @@ bool setup_camera() {
   config.xclk_freq_hz = 20000000;
   config.pixel_format = PIXFORMAT_JPEG;
   config.frame_size = FRAMESIZE_QVGA;
-  config.jpeg_quality = 12;
+  config.jpeg_quality = CAMERA_JPEG_QUALITY;
   config.fb_count = 1;
   config.fb_location = CAMERA_FB_IN_PSRAM;
   config.grab_mode = CAMERA_GRAB_WHEN_EMPTY;

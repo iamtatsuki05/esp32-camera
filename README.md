@@ -85,6 +85,14 @@ uv run python scripts/post_sample_frame.py
 - `data/outputs/results/*.json`
 - `data/outputs/uploads/dry-run/*.json`
 
+保存時の JPEG 画質は `save_jpeg_quality` で設定できます。
+
+```toml
+save_jpeg_quality = 85
+```
+
+`null` または項目なしなら、受信した JPEG bytes をそのまま保存します。`1` から `95` を指定すると、サーバー保存時に JPEG を再エンコードします。数値が大きいほど高画質・大きいファイルになります。
+
 既定は `mock-yolo` です。実 YOLO を使う場合は、追加で `ultralytics` を入れ、`analyzer = "ultralytics-yolo"` に切り替えます。
 
 ```sh
@@ -127,6 +135,7 @@ cp firmware/esp32cam_monitor/include/config.sample.h firmware/esp32cam_monitor/i
 - `WIFI_PASSWORD`
 - `SERVER_URL`: 例 `http://192.168.0.10:8000/api/v1/frames`
 - `CAMERA_ID`
+- `CAMERA_JPEG_QUALITY`: ESP32 側の撮影 JPEG 品質。ESP32-CAM では数値が小さいほど高画質・大きい payload です。
 
 PC 側サーバーを ESP32 から到達できる IP で起動してください。
 

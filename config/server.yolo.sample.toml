@@ -4,5 +4,6 @@ output_dir = "data/outputs"
 analyzer = "ultralytics-yolo"
 yolo_model_path = "yolov8n.pt"
 yolo_confidence_threshold = 0.25
+save_jpeg_quality = 85
 uploader_mode = "dry-run"
 default_camera_id = "esp32-cam"
