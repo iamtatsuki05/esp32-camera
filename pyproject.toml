@@ -151,7 +151,7 @@ build-backend = "hatchling.build"
 
 [dependency-groups]
 dev = [
-    "jupyterlab>=4.1.0",
+    "jupyterlab>=4.5.7",
     "marimo>=0.17.0",
     "tox>=4.30.0",
     "hypothesis>=6.148.2",
