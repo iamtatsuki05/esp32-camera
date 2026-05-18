@@ -6,5 +6,6 @@ analyzer = "mock-yolo"
 yolo_model_path = "yolov8n.pt"
 yolo_confidence_threshold = 0.25
 save_jpeg_quality = 85
+video_fps = 2.0
 uploader_mode = "dry-run"
 default_camera_id = "esp32-cam"

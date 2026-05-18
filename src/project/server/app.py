@@ -23,12 +23,17 @@ def create_app(settings: ServerSettings | None = None) -> FastAPI:
         storage=LocalFrameStorage(
             output_dir=resolved_settings.output_dir,
             save_jpeg_quality=resolved_settings.save_jpeg_quality,
+            video_fps=resolved_settings.video_fps,
         ),
         uploader=create_uploader(resolved_settings.uploader_mode, resolved_settings.output_dir),
     )
     app = FastAPI(title='ESP32 Camera Monitor', version='0.1.0')
     app.state.settings = resolved_settings
     app.state.pipeline = pipeline
+
+    @app.on_event('shutdown')
+    def close_storage() -> None:
+        app.state.pipeline.storage.close()
 
     @app.get('/health')
     def health() -> dict[str, str]:

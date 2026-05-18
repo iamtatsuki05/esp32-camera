@@ -34,7 +34,7 @@ class AnalysisPipeline:
         captured_at = datetime.now(tz=UTC)
         detections = self.analyzer.analyze(frame)
         tracking = self.tracker.update(detections, now=captured_at)
-        image_path = self.storage.save_image(event_id, frame.image_bytes, frame.content_type)
+        video_frame = self.storage.save_video_frame(frame.camera_id, frame.image_bytes, frame.content_type)
         result = AnalysisResult(
             event_id=event_id,
             camera_id=frame.camera_id,
@@ -46,7 +46,9 @@ class AnalysisPipeline:
             active_tracks=tracking.active_tracks,
             ended_tracks=tracking.ended_tracks,
             content_type=frame.content_type,
-            image_path=str(image_path),
+            image_path=None,
+            video_path=video_frame.video_path,
+            video_frame_index=video_frame.frame_index,
         )
         result.result_path = str(self.storage.save_result(result))
         upload = self.uploader.upload(result)

@@ -19,6 +19,7 @@ class ServerSettings(BaseModel):
     yolo_model_path: str = 'yolov8n.pt'
     yolo_confidence_threshold: float = Field(default=0.25, ge=0.0, le=1.0)
     save_jpeg_quality: int | None = Field(default=None, ge=1, le=95)
+    video_fps: float = Field(default=2.0, gt=0.0)
     uploader_mode: Literal['dry-run'] = 'dry-run'
     default_camera_id: str = 'esp32-cam'
 

@@ -26,6 +26,7 @@ def serve(  # noqa: PLR0913
     yolo_model_path: str | None = None,
     yolo_confidence_threshold: float | None = None,
     save_jpeg_quality: int | None = None,
+    video_fps: float | None = None,
     uploader_mode: str | None = None,
     default_camera_id: str | None = None,
 ) -> None:
@@ -39,6 +40,7 @@ def serve(  # noqa: PLR0913
         yolo_model_path=yolo_model_path,
         yolo_confidence_threshold=yolo_confidence_threshold,
         save_jpeg_quality=save_jpeg_quality,
+        video_fps=video_fps,
         uploader_mode=uploader_mode,
         default_camera_id=default_camera_id,
     )
@@ -60,7 +62,11 @@ def analyze_file(
             yolo_model_path=settings.yolo_model_path,
             yolo_confidence_threshold=settings.yolo_confidence_threshold,
         ),
-        storage=LocalFrameStorage(settings.output_dir, save_jpeg_quality=settings.save_jpeg_quality),
+        storage=LocalFrameStorage(
+            settings.output_dir,
+            save_jpeg_quality=settings.save_jpeg_quality,
+            video_fps=settings.video_fps,
+        ),
         uploader=create_uploader(settings.uploader_mode, settings.output_dir),
     )
     result = pipeline.process(

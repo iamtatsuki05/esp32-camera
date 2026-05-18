@@ -28,10 +28,12 @@ def test_pipeline_saves_frame_result_and_dry_run_upload(tmp_path: Path) -> None:
     assert result.analyzer == 'mock-yolo'
     assert result.upload.status == 'dry-run'
     assert len(result.detections) == 1
-    assert result.image_path is not None
+    assert result.video_path is not None
+    assert result.video_frame_index == 0
     assert result.result_path is not None
     assert result.upload_path is not None
-    assert Path(result.image_path).is_file()
+    pipeline.storage.close()
+    assert Path(result.video_path).is_file()
     assert Path(result.result_path).is_file()
     assert Path(result.upload_path).is_file()
 
@@ -49,14 +51,14 @@ def test_pipeline_tracks_person_count_and_person_labels(tmp_path: Path) -> None:
 
     first = pipeline.process(
         FrameInput(
-            image_bytes=b'frame-1',
+            image_bytes=SMOKE_JPEG,
             content_type='image/jpeg',
             camera_id='esp32-test',
         ),
     )
     second = pipeline.process(
         FrameInput(
-            image_bytes=b'frame-2',
+            image_bytes=SMOKE_JPEG,
             content_type='image/jpeg',
             camera_id='esp32-test',
         ),

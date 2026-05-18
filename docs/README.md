@@ -5,5 +5,6 @@
 - ESP32 firmware: `firmware/esp32cam_monitor/README.md`
 - サーバー設定例: `config/server.sample.toml`
 - 実 YOLO サーバー設定例: `config/server.yolo.sample.toml`
-- ローカル出力: `data/outputs/`
+- ローカル動画出力: `data/outputs/videos/`
+- 解析 JSON / dry-run payload: `data/outputs/results/`, `data/outputs/uploads/dry-run/`
 - 人物カウントと track duration: root `README.md` の `API` を参照してください。

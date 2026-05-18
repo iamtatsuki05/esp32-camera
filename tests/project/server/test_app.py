@@ -25,8 +25,9 @@ def test_frame_endpoint_accepts_raw_image_and_returns_saved_paths(tmp_path: Path
     assert payload['camera_id'] == 'esp32-test'
     assert payload['analyzer'] == 'mock-yolo'
     assert payload['upload']['status'] == 'dry-run'
-    assert payload['image_path'].endswith('.jpg')
-    assert Path(payload['image_path']).is_file()
+    assert payload['image_path'] is None
+    assert payload['video_path'].endswith('.avi')
+    assert payload['video_frame_index'] == 0
     assert Path(payload['result_path']).is_file()
 
 
@@ -55,9 +56,9 @@ def test_frame_endpoint_uses_configured_save_jpeg_quality(tmp_path: Path) -> Non
     )
 
     assert response.status_code == 201
-    saved = Path(response.json()['image_path']).read_bytes()
-    assert saved.startswith(b'\xff\xd8\xff')
-    assert saved != SMOKE_JPEG
+    payload = response.json()
+    assert payload['image_path'] is None
+    assert payload['video_path'].endswith('.avi')
 
 
 def test_health_endpoint_reports_dry_run_defaults(tmp_path: Path) -> None:

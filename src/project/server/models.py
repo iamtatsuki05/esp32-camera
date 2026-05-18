@@ -62,6 +62,8 @@ class AnalysisResult(BaseModel):
     ended_tracks: list[PersonTrack] = Field(default_factory=list)
     content_type: str
     image_path: str | None = None
+    video_path: str | None = None
+    video_frame_index: int | None = None
     result_path: str | None = None
     upload_path: str | None = None
     upload: UploadResult = Field(

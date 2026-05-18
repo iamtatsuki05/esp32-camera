@@ -81,17 +81,25 @@ uv run python scripts/post_sample_frame.py
 
 保存先:
 
-- `data/outputs/images/*.jpg`
+- `data/outputs/videos/*.avi`
 - `data/outputs/results/*.json`
 - `data/outputs/uploads/dry-run/*.json`
 
-保存時の JPEG 画質は `save_jpeg_quality` で設定できます。
+サーバーは受信 frame を個別画像として保存せず、camera ID ごとの動画に追記します。解析 JSON には `video_path` と `video_frame_index` が残ります。
+
+動画へ書き込む前の JPEG 再エンコード品質は `save_jpeg_quality` で設定できます。
 
 ```toml
 save_jpeg_quality = 85
 ```
 
-`null` または項目なしなら、受信した JPEG bytes をそのまま保存します。`1` から `95` を指定すると、サーバー保存時に JPEG を再エンコードします。数値が大きいほど高画質・大きいファイルになります。
+`null` または項目なしなら、受信した JPEG bytes をそのまま動画 frame に変換します。`1` から `95` を指定すると、動画へ書き込む前に JPEG を再エンコードします。数値が大きいほど高画質・大きいファイルになります。
+
+動画 FPS は `video_fps` で設定します。
+
+```toml
+video_fps = 2.0
+```
 
 既定は `mock-yolo` です。実 YOLO を使う場合は、追加で `ultralytics` を入れ、`analyzer = "ultralytics-yolo"` に切り替えます。
 
@@ -200,6 +208,12 @@ make esp32-monitor PORT=/dev/cu.usbserial-1440
 find data/outputs -type f | sort
 ```
 
+動画だけを見る場合:
+
+```sh
+find data/outputs/videos -type f | sort
+```
+
 ## API
 
 Health:
@@ -228,6 +242,8 @@ curl -X POST \
 - `detections[].duration_seconds`: その人物が最初に認識されてから現在 frame までの秒数。
 - `active_tracks`: 現在認識中または猶予時間内の人物。
 - `ended_tracks`: 今回の frame で認識終了扱いになった人物。
+- `video_path`: frame が追記された動画ファイル。
+- `video_frame_index`: その動画内の frame index。
 
 ## アップロード方針
 
