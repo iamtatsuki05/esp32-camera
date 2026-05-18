@@ -146,3 +146,4 @@ firmware/**/include/config.h
 
 # Local ML model artifacts
 *.pt
+.agent_runtime/

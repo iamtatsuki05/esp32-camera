@@ -5,7 +5,20 @@ import sys
 from pathlib import Path
 from urllib import parse, request
 
+from project.server.sample_images import SMOKE_JPEG
+
 IMAGE_PATH_ARG_INDEX = 2
+
+
+def _default_payload() -> bytes:
+    try:
+        import ultralytics  # noqa: PLC0415
+    except ImportError:
+        return SMOKE_JPEG
+    bus_image = Path(ultralytics.__file__).parent / 'assets' / 'bus.jpg'
+    if bus_image.is_file():
+        return bus_image.read_bytes()
+    return SMOKE_JPEG
 
 
 def main() -> None:
@@ -16,7 +29,7 @@ def main() -> None:
         msg = f'Unsupported URL scheme: {parsed.scheme}'
         raise ValueError(msg)
     image_path = Path(sys.argv[IMAGE_PATH_ARG_INDEX]) if len(sys.argv) > IMAGE_PATH_ARG_INDEX else None
-    payload = image_path.read_bytes() if image_path else b'smoke-frame'
+    payload = image_path.read_bytes() if image_path else _default_payload()
     req = request.Request(  # noqa: S310
         server_url,
         data=payload,

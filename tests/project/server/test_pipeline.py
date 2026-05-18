@@ -4,6 +4,7 @@ from pathlib import Path
 from project.server.analyzers import MockYoloAnalyzer
 from project.server.models import FrameInput
 from project.server.pipeline import AnalysisPipeline
+from project.server.sample_images import SMOKE_JPEG
 from project.server.storage import LocalFrameStorage
 from project.server.uploaders import DryRunUploader
 
@@ -17,7 +18,7 @@ def test_pipeline_saves_frame_result_and_dry_run_upload(tmp_path: Path) -> None:
 
     result = pipeline.process(
         FrameInput(
-            image_bytes=b'not-a-real-jpeg-but-valid-for-smoke',
+            image_bytes=SMOKE_JPEG,
             content_type='image/jpeg',
             camera_id='esp32-test',
         ),

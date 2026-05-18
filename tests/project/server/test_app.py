@@ -3,6 +3,7 @@ from pathlib import Path
 from fastapi.testclient import TestClient
 
 from project.server.app import create_app
+from project.server.sample_images import SMOKE_JPEG
 from project.server.settings import ServerSettings
 
 
@@ -12,7 +13,7 @@ def test_frame_endpoint_accepts_raw_image_and_returns_saved_paths(tmp_path: Path
 
     response = client.post(
         '/api/v1/frames',
-        content=b'jpeg-bytes',
+        content=SMOKE_JPEG,
         headers={
             'content-type': 'image/jpeg',
             'x-camera-id': 'esp32-test',
@@ -27,6 +28,20 @@ def test_frame_endpoint_accepts_raw_image_and_returns_saved_paths(tmp_path: Path
     assert payload['image_path'].endswith('.jpg')
     assert Path(payload['image_path']).is_file()
     assert Path(payload['result_path']).is_file()
+
+
+def test_frame_endpoint_rejects_non_image_bytes(tmp_path: Path) -> None:
+    app = create_app(ServerSettings(output_dir=tmp_path))
+    client = TestClient(app)
+
+    response = client.post(
+        '/api/v1/frames',
+        content=b'smoke-frame',
+        headers={'content-type': 'image/jpeg'},
+    )
+
+    assert response.status_code == 415
+    assert not list((tmp_path / 'images').glob('*'))
 
 
 def test_health_endpoint_reports_dry_run_defaults(tmp_path: Path) -> None:

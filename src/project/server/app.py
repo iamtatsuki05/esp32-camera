@@ -3,6 +3,7 @@ from __future__ import annotations
 from fastapi import FastAPI, HTTPException, Request, Response, status
 
 from project.server.analyzers import create_analyzer
+from project.server.image_validation import validate_image_bytes
 from project.server.models import AnalysisResult, FrameInput
 from project.server.pipeline import AnalysisPipeline
 from project.server.settings import ServerSettings
@@ -41,6 +42,10 @@ def create_app(settings: ServerSettings | None = None) -> FastAPI:
         if not image_bytes:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='Frame body is empty.')
         content_type = request.headers.get('content-type', 'image/jpeg')
+        try:
+            content_type = validate_image_bytes(image_bytes, content_type)
+        except ValueError as exc:
+            raise HTTPException(status_code=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE, detail=str(exc)) from exc
         camera_id = request.headers.get('x-camera-id', resolved_settings.default_camera_id)
         frame = FrameInput(image_bytes=image_bytes, content_type=content_type, camera_id=camera_id)
         result = app.state.pipeline.process(frame)
