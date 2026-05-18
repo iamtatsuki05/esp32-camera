@@ -139,3 +139,10 @@ dmypy.json
 ._*
 .Spotlight-V100
 .Trashes
+
+# ESP32 local build and secrets
+firmware/**/.pio/
+firmware/**/include/config.h
+
+# Local ML model artifacts
+*.pt

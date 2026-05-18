@@ -1,15 +1,9 @@
-import logging
-
-from project.env import PACKAGE_DIR
-
-logger = logging.getLogger(__name__)
+from project.server.cli import cli
 
 
 def main() -> None:
-    """Sample entry point."""
-    logging.basicConfig(level=logging.INFO)
-    logger.info('Hello, World!')
-    logger.info('PACKAGE_DIR=%s', PACKAGE_DIR)
+    """Run the ESP32 camera server CLI."""
+    cli()
 
 
 if __name__ == '__main__':
