@@ -29,6 +29,7 @@
 namespace {
 
 bool camera_ready = false;
+bool wifi_ready = false;
 
 constexpr int PWDN_GPIO_NUM = 32;
 constexpr int RESET_GPIO_NUM = -1;
@@ -96,6 +97,7 @@ bool setup_camera() {
   const esp_err_t err = esp_camera_init(&config);
   if (err != ESP_OK) {
     Serial.printf("Camera init failed: 0x%x\n", err);
+    Serial.println("Check camera ribbon cable, board model, pin mapping, and power supply.");
     return false;
   }
   Serial.println("Camera initialized");
@@ -128,21 +130,33 @@ void setup() {
   Serial.begin(115200);
   delay(1000);
   Serial.println("ESP32-CAM monitor booting");
-  if (!connect_wifi()) {
+  wifi_ready = connect_wifi();
+  if (!wifi_ready) {
     return;
   }
   camera_ready = setup_camera();
 }
 
 void loop() {
+  if (WiFi.status() != WL_CONNECTED) {
+    wifi_ready = false;
+    camera_ready = false;
+    Serial.println("Wi-Fi disconnected; reconnecting before camera capture");
+    wifi_ready = connect_wifi();
+    delay(CAPTURE_INTERVAL_MS);
+    return;
+  }
+  if (!wifi_ready) {
+    Serial.println("Wi-Fi is not ready; retrying connection");
+    wifi_ready = connect_wifi();
+    delay(CAPTURE_INTERVAL_MS);
+    return;
+  }
   if (!camera_ready) {
     Serial.println("Camera is not ready; retrying initialization");
     camera_ready = setup_camera();
     delay(CAPTURE_INTERVAL_MS);
     return;
-  }
-  if (WiFi.status() != WL_CONNECTED) {
-    connect_wifi();
   }
   post_frame();
   delay(CAPTURE_INTERVAL_MS);

@@ -137,13 +137,22 @@ ls /dev/cu.* /dev/tty.* 2>/dev/null
 cp firmware/esp32cam_monitor/include/config.sample.h firmware/esp32cam_monitor/include/config.h
 ```
 
-`config.h` を編集します。
+手で `config.h` を編集する代わりに、`.env` から生成できます。
 
-- `WIFI_SSID`
-- `WIFI_PASSWORD`
-- `SERVER_URL`: 例 `http://192.168.0.10:8000/api/v1/frames`
-- `CAMERA_ID`
-- `CAMERA_JPEG_QUALITY`: ESP32 側の撮影 JPEG 品質。ESP32-CAM では数値が小さいほど高画質・大きい payload です。
+```sh
+cp env.sample .env
+$EDITOR .env
+make esp32-config
+```
+
+`.env` で使う主な項目:
+
+- `ESP32_WIFI_SSID`
+- `ESP32_WIFI_PASSWORD`
+- `ESP32_CAMERA_SERVER_URL`: 例 `http://192.168.0.10:8000/api/v1/frames`
+- `ESP32_CAMERA_ID`
+- `ESP32_CAPTURE_INTERVAL_MS`
+- `ESP32_CAMERA_JPEG_QUALITY`: ESP32 側の撮影 JPEG 品質。ESP32-CAM では数値が小さいほど高画質・大きい payload です。
 
 PC 側サーバーを ESP32 から到達できる IP で起動してください。
 
@@ -169,7 +178,7 @@ uv tool run --with pip platformio run
 ## Firmware 書き込み
 
 書き込みは ESP32 の既存 firmware を上書きします。対象ポート、ボード、配線、boot mode を確認してから実行してください。
-`make esp32-upload` は `firmware/esp32cam_monitor/include/config.h` が存在し、sample の placeholder が残っていない場合だけ進みます。
+`make esp32-upload` は `.env` から `config.h` を生成し、sample の placeholder が残っていない場合だけ進みます。
 
 ```sh
 make esp32-upload PORT=/dev/cu.usbserial-1440

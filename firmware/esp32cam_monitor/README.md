@@ -5,11 +5,12 @@
 
 ## 初期設定
 
+repo root の `.env` に `ESP32_WIFI_SSID`、`ESP32_WIFI_PASSWORD`、`ESP32_CAMERA_SERVER_URL`、`ESP32_CAMERA_ID`、撮影 JPEG quality を設定し、以下で `config.h` を生成します。
+
 ```sh
-cp firmware/esp32cam_monitor/include/config.sample.h firmware/esp32cam_monitor/include/config.h
+make esp32-config
 ```
 
-`config.h` に Wi-Fi SSID、Wi-Fi password、PC 側サーバー URL、camera ID、撮影 JPEG quality を設定します。
 `config.h` は `.gitignore` 済みです。
 repo root の `make esp32-upload` は、placeholder が残っている `config.h` では停止します。
 
